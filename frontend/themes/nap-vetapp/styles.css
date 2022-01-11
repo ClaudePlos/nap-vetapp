@@ -26,3 +26,15 @@
       --lumo-space-xs: 0.1875rem;
 
     }
+
+html {
+      --lumo-primary-color: hsl(177, 100%, 37%);
+      --lumo-primary-color-50pct: hsl(177, 100%, 37%, 0.5);
+      --lumo-primary-color-10pct: hsl(177, 100%, 37%, 0.1);
+
+}
+
+#header {
+      background-color: aqua;
+      background: #3b9174;
+}
