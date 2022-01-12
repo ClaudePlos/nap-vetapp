@@ -18,7 +18,7 @@ import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import pl.kskowronski.data.entity.User;
+import pl.kskowronski.data.entity.admin.User;
 import pl.kskowronski.security.AuthenticatedUser;
 import pl.kskowronski.views.autostradaimport.AutostradaimportView;
 import pl.kskowronski.views.home.HomeView;
@@ -81,7 +81,9 @@ public class MainLayout extends AppLayout {
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
 
-            Avatar avatar = new Avatar(user.getName(), user.getProfilePictureUrl());
+            int colorIndex = (int) ((Math.random() * (20 - 1)) + 1);
+            Avatar avatar = new Avatar(!user.getPrcImie().isEmpty()? user.getPrcImie() + ' ' + user.getPrcNazwisko() : user.getUsername());
+            avatar.setColorIndex(colorIndex);
             avatar.addClassNames("me-xs");
 
             ContextMenu userMenu = new ContextMenu(avatar);
@@ -90,7 +92,7 @@ public class MainLayout extends AppLayout {
                 authenticatedUser.logout();
             });
 
-            Span name = new Span(user.getName());
+            Span name = new Span(!user.getPrcImie().isEmpty()? user.getPrcImie() + ' ' + user.getPrcNazwisko() : user.getUsername());
             name.addClassNames("font-medium", "text-s", "text-secondary");
 
             layout.add(avatar, name);

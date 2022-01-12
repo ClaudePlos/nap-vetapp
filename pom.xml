@@ -165,6 +165,21 @@
         </dependency>
 
 
+        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc10 -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>19.7.0.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.oracle.ojdbc/orai18n -->
+        <dependency>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>orai18n</artifactId>
+            <version>19.3.0.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

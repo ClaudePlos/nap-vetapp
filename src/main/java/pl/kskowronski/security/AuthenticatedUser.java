@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Component;
-import pl.kskowronski.data.entity.User;
+import pl.kskowronski.data.entity.admin.User;
 import pl.kskowronski.data.service.UserRepository;
 
 @Component

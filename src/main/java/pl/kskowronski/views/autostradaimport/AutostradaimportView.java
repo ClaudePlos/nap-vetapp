@@ -3,6 +3,7 @@ package pl.kskowronski.views.autostradaimport;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
@@ -15,15 +16,15 @@ import com.vaadin.flow.shared.util.SharedUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import pl.kskowronski.views.MainLayout;
+import pl.kskowronski.views.components.PeriodLayout;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @PageTitle("Autostrada import")
 @Route(value = "higway_import", layout = MainLayout.class)
@@ -40,6 +41,8 @@ public class AutostradaimportView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         getStyle().set("text-align", "center");
 
+        var period = new PeriodLayout(0);
+
         var buffer = new MemoryBuffer();
         var upload = new Upload(buffer);
         upload.addSucceededListener( e -> {
@@ -52,7 +55,17 @@ public class AutostradaimportView extends VerticalLayout {
                 invalidFormatException.printStackTrace();
             }
         });
-        add(grid, upload);
+
+        var buttonInsertInvoiceToEgeria = new Button("Wgraj do Egerii");
+        buttonInsertInvoiceToEgeria.addClickListener( e -> {
+                Stream<String[]> items = grid.getGenericDataView().getItems();
+        });
+
+        add(period, grid, upload, buttonInsertInvoiceToEgeria);
+    }
+
+    private void insertInvoiceToEgeria() {
+        Stream<String[]> items = grid.getGenericDataView().getItems();
     }
 
     private void readFromClasspath(){
