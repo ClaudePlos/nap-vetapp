@@ -179,6 +179,13 @@
             <version>19.3.0.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.vaadin.artur/a-vaadin-helper -->
+        <dependency>
+            <groupId>org.vaadin.artur</groupId>
+            <artifactId>a-vaadin-helper</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+
 
     </dependencies>
 

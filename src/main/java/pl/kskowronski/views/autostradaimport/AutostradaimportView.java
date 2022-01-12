@@ -4,7 +4,10 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
@@ -15,6 +18,10 @@ import javax.annotation.security.PermitAll;
 import com.vaadin.flow.shared.util.SharedUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import pl.kskowronski.data.entity.global.EatFirma;
+import pl.kskowronski.data.service.global.EatFirmaService;
+import pl.kskowronski.data.service.nz.NzService;
 import pl.kskowronski.views.MainLayout;
 import pl.kskowronski.views.components.PeriodLayout;
 
@@ -31,9 +38,15 @@ import java.util.stream.Stream;
 @PermitAll
 public class AutostradaimportView extends VerticalLayout {
 
-    Grid<String[]> grid = new Grid<>();
+    private EatFirmaService eatFirmaService;
+    private NzService nzService;
 
-    public AutostradaimportView() {
+    private Grid<String[]> grid = new Grid<>();
+
+    @Autowired
+    public AutostradaimportView(EatFirmaService eatFirmaService, NzService nzService) {
+        this.eatFirmaService = eatFirmaService;
+        this.nzService = nzService;
         setSpacing(false);
 
         setSizeFull();
@@ -41,6 +54,7 @@ public class AutostradaimportView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         getStyle().set("text-align", "center");
 
+        var frmList  = getSelectFrm();
         var period = new PeriodLayout(0);
 
         var buffer = new MemoryBuffer();
@@ -59,9 +73,10 @@ public class AutostradaimportView extends VerticalLayout {
         var buttonInsertInvoiceToEgeria = new Button("Wgraj do Egerii");
         buttonInsertInvoiceToEgeria.addClickListener( e -> {
                 Stream<String[]> items = grid.getGenericDataView().getItems();
+                nzService.addHighwayFeeInvoiceToEgeria(items);
         });
 
-        add(period, grid, upload, buttonInsertInvoiceToEgeria);
+        add( new HorizontalLayout(new Label("Firma: "), frmList, period), grid, upload, buttonInsertInvoiceToEgeria);
     }
 
     private void insertInvoiceToEgeria() {
@@ -202,6 +217,13 @@ public class AutostradaimportView extends VerticalLayout {
 
         // Closing the workbook
         workbook.close();
+    }
+
+    private ComboBox<EatFirma> getSelectFrm() {
+        ComboBox<EatFirma> comboFrm = new ComboBox<>();
+        comboFrm.setItems(eatFirmaService.findAll());
+        comboFrm.setItemLabelGenerator(EatFirma::getFrmNazwa);
+        return comboFrm;
     }
 
 }
