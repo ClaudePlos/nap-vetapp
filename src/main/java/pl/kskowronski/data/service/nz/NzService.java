@@ -20,9 +20,9 @@ public class NzService {
     private EntityManager em;
 
 
-    public String addHighwayFeeInvoiceToEgeria(Stream<String[]> items) {
+    public String addHighwayFeeInvoiceToEgeria(Stream<String[]> items, String frmName, String period,  String foreignInvoiceNumber) {
 
-
+        int dokId = addNewDocumentHeader( frmName, period, foreignInvoiceNumber, "BP");
 
 
 
@@ -30,7 +30,7 @@ public class NzService {
     }
 
 
-    private int addNewDocumentHeader(String pSpolka, String pMiesiac, String nrFaktury, String pKontrahent) {
+    private int addNewDocumentHeader(String frmName, String period,  String foreignInvoiceNumber, String pInvoiceCompanyName) {
         Session session = em.unwrap( Session.class );
         Integer docId = null;
         try {
@@ -40,10 +40,10 @@ public class NzService {
                                 .prepareCall(
                                         "{call ? := naprzod.nap_nz_tools.generuj_fzp_naglowek(?,?,?,?)}")) {
                             function.registerOutParameter(1, Types.INTEGER );
-                            function.setString(2 , pSpolka );
-                            function.setString(3 , pMiesiac );
-                            function.setString(4 , nrFaktury);
-                            function.setString(5 , pKontrahent );
+                            function.setString(2 , frmName );
+                            function.setString(3 , period );
+                            function.setString(4 , foreignInvoiceNumber);
+                            function.setString(5 , pInvoiceCompanyName );
                             function.execute();
                             return function.getInt(1);
                         }

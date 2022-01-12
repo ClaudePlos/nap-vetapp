@@ -3,6 +3,7 @@ package pl.kskowronski.views.autostradaimport;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
@@ -56,6 +57,7 @@ public class AutostradaimportView extends VerticalLayout {
 
         var frmList  = getSelectFrm();
         var period = new PeriodLayout(0);
+        var foreignInvoiceNumber = new Text("");
 
         var buffer = new MemoryBuffer();
         var upload = new Upload(buffer);
@@ -73,10 +75,11 @@ public class AutostradaimportView extends VerticalLayout {
         var buttonInsertInvoiceToEgeria = new Button("Wgraj do Egerii");
         buttonInsertInvoiceToEgeria.addClickListener( e -> {
                 Stream<String[]> items = grid.getGenericDataView().getItems();
-                nzService.addHighwayFeeInvoiceToEgeria(items);
+                nzService.addHighwayFeeInvoiceToEgeria(items, frmList.getValue().getFrmNazwa(), period.getPeriod(), foreignInvoiceNumber.getText());
         });
 
-        add( new HorizontalLayout(new Label("Firma: "), frmList, period), grid, upload, buttonInsertInvoiceToEgeria);
+        add( new HorizontalLayout(new Label("Firma: "), frmList, period, new Label("Numer obcy:"), foreignInvoiceNumber)
+                , grid, upload, buttonInsertInvoiceToEgeria);
     }
 
     private void insertInvoiceToEgeria() {
