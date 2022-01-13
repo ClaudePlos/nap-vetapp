@@ -58,7 +58,7 @@ docker build . -t nap-vetapp:latest
 Once the Docker image is correctly built, you can test it locally using
 
 ```
-docker run -p 8080:8080 nap-vetapp:latest
+docker run -p 8083:8080 nap-vetapp:latest
 ```
 
 
@@ -104,3 +104,23 @@ If you want to remove your whole deployment and start over, run
 ```
 kubectl delete -f kubernetes.yaml
 ```
+
+
+## k.skowronski added:
+## Deploying using Docker Production
+<pre>
+1. mvn clean package -Pproduction
+2. Send from target to 0.97 (docker machine)
+
+On production machine:
+1. If you want add adn build new image:
+sudo docker build -t nap-vetapp . << dot is important
+
+2. sudo docker run -p 8083:8080 nap-vetapp:latest
+
+3. sudo docker container start ID (id from docker ps -a)
+
+
+</pre>
+
+http://192.168.0.97:8083/
