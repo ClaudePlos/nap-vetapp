@@ -97,7 +97,7 @@ public class NzService {
                             function.setString(6 , "1" ); // ilosc
                             function.setString(7 , netAmount ); // cena_jednostokowa
                             function.setString(8 , netAmount ); // wartosc netto
-                            function.setString(9 , vatAmount.equals("0") ? "0" : "24" ); // stawka vat
+                            function.setString(9 , vatAmount.equals("0") ? "0" : "23" ); // stawka vat
                             function.setString(10 , vatAmount ); // wartosc vat
                             function.setString(11 , grossAmount ); // wart brutto
                             function.setString(12 , vehicle ); // dod info nr rej.
