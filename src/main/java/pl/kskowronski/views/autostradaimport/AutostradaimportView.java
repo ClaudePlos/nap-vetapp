@@ -5,11 +5,18 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
@@ -57,7 +64,7 @@ public class AutostradaimportView extends VerticalLayout {
 
         var frmList  = getSelectFrm();
         var period = new PeriodLayout(0);
-        var foreignInvoiceNumber = new Text("");
+        var foreignInvoiceNumber = new TextField("");
 
         var buffer = new MemoryBuffer();
         var upload = new Upload(buffer);
@@ -74,8 +81,10 @@ public class AutostradaimportView extends VerticalLayout {
 
         var buttonInsertInvoiceToEgeria = new Button("Wgraj do Egerii");
         buttonInsertInvoiceToEgeria.addClickListener( e -> {
-                Stream<String[]> items = grid.getGenericDataView().getItems();
-                nzService.addHighwayFeeInvoiceToEgeria(items, frmList.getValue().getFrmNazwa(), period.getPeriod(), foreignInvoiceNumber.getText());
+                var items = grid.getDataProvider();
+                int egeriaDokId = nzService.addHighwayFeeInvoiceToEgeria(items, frmList.getValue().getFrmNazwa(), period.getPeriod(), foreignInvoiceNumber.getValue());
+                Notification not = createSubmitSuccess("Dodano dokument w Egerii id: " + egeriaDokId);
+                not.open();
         });
 
         add( new HorizontalLayout(new Label("Firma: "), frmList, period, new Label("Numer obcy:"), foreignInvoiceNumber)
@@ -227,6 +236,39 @@ public class AutostradaimportView extends VerticalLayout {
         comboFrm.setItems(eatFirmaService.findAll());
         comboFrm.setItemLabelGenerator(EatFirma::getFrmNazwa);
         return comboFrm;
+    }
+
+
+    private Notification createSubmitSuccess( String text) {
+        Notification notification = new Notification();
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        notification.setPosition(Notification.Position.MIDDLE);
+
+        Icon icon = VaadinIcon.CHECK_CIRCLE.create();
+        Div info = new Div(new Text(text));
+
+//        Button viewBtn = new Button(
+//                "View",
+//                clickEvent -> notification.close());
+//        viewBtn.getStyle().set("margin", "0 0 0 var(--lumo-space-l)");
+
+        HorizontalLayout layout = new HorizontalLayout(
+                icon, info, //viewBtn,
+                createCloseBtn(notification));
+        layout.setAlignItems(Alignment.CENTER);
+
+        notification.add(layout);
+
+        return notification;
+    }
+
+    private static Button createCloseBtn(Notification notification) {
+        Button closeBtn = new Button(
+                VaadinIcon.CLOSE_SMALL.create(),
+                clickEvent -> notification.close());
+        closeBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+
+        return closeBtn;
     }
 
 }

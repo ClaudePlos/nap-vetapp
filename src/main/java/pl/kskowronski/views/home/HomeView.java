@@ -23,7 +23,7 @@ public class HomeView extends HorizontalLayout {
     public HomeView() {
 
 
-        add(new Label("Test"));
+        add(new Label(" "), new Label(" Zaloguj się na stronę"));
     }
 
 }

@@ -38,3 +38,24 @@ html {
       background-color: aqua;
       background: #3b9174;
 }
+
+a.zaloguj {
+      height: 100px;
+      width: 100px;
+      border-radius: 100%;
+      background-color: hsl(177, 100%, 37%);
+      border: 10px solid #3b9174;
+      box-shadow: 4px 4px 4px #999;
+      font-weight: bold;
+      font-size: 1.5em;
+      text-align: center;
+      vertical-align: middle;
+      color: white;
+      line-height: 100px; /*or you could use 4em*/
+}
+
+
+
+
+
+

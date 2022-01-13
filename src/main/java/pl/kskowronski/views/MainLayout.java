@@ -97,7 +97,8 @@ public class MainLayout extends AppLayout {
 
             layout.add(avatar, name);
         } else {
-            Anchor loginLink = new Anchor("login", "Sign in");
+            Anchor loginLink = new Anchor("login", "zaloguj");
+            loginLink.setClassName("zaloguj");
             layout.add(loginLink);
         }
 
