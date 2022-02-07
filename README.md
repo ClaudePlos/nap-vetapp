@@ -110,7 +110,12 @@ kubectl delete -f kubernetes.yaml
 ## Deploying using Docker Production
 <pre>
 1. mvn clean package -Pproduction
-2. Send from target to 0.97 (docker machine)
+2. add to \nap-portal-pg-1.0-SNAPSHOT.jar\META-INF\VAADIN\webapp\index.html
+<pre>
+ html lang="en" class="notranslate" translate="no"    <!-- All translators -->
+ meta name="google" content="notranslate"  <!-- Just for google -->
+</pre>
+3. Send from target to 0.97 (docker machine)
 
 On production machine:
 1. If you want add adn build new image:
