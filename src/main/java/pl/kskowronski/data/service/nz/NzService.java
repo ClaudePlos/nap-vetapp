@@ -26,7 +26,6 @@ public class NzService {
         int dokId = addNewDocumentHeader( frmName, period, foreignInvoiceNumber, "AUTOPAY MOBILITY SP. Z O.O.");
         addPositionsToEgeriaInvoice(dokId, frmName, items);
 
-
         return dokId;
     }
 
@@ -113,6 +112,13 @@ public class NzService {
     }
 
 
+
+
+    public int changePositionOnFzuInvoice(DataProvider<String[],?> items, String nrDoc, String clientName ) {
+
+
+        return 0;
+    }
 
 
 }
