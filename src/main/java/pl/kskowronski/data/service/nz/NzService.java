@@ -121,4 +121,16 @@ public class NzService {
     }
 
 
+    public int addLeaseFeeInvoiceToEgeria(DataProvider<String[], ?> items, String frmName, String period, String foreignInvoiceNumber, String client) {
+
+        if( client == "ALD") {
+            // TODO: ustawić nazwę klienta z Egerii
+        }
+        int dokId = addNewDocumentHeader( frmName, period, foreignInvoiceNumber, client);
+        addPositionsToEgeriaInvoice(dokId, frmName, items);
+
+        return dokId;
+    }
+
+
 }
