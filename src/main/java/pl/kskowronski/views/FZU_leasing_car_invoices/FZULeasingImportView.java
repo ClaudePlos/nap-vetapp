@@ -38,7 +38,7 @@ import java.util.List;
 @PageTitle("FZU")
 @Route(value = "fzu", layout = MainLayout.class)
 @PermitAll
-public class FZUleazingView extends VerticalLayout {
+public class FZULeasingImportView extends VerticalLayout {
 
     private EatFirmaService eatFirmaService;
     private NzService nzService;
@@ -48,7 +48,7 @@ public class FZUleazingView extends VerticalLayout {
     private TextField fieldNrDoc = new TextField("Nr dok. Egeria");
     private ComboBox<String> cmbClients = new ComboBox<>();
 
-    public FZUleazingView(EatFirmaService eatFirmaService, NzService nzService) {
+    public FZULeasingImportView(EatFirmaService eatFirmaService, NzService nzService) {
         this.eatFirmaService = eatFirmaService;
         this.nzService = nzService;
         setSpacing(false);
