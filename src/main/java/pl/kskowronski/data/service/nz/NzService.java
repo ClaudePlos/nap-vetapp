@@ -169,7 +169,7 @@ public class NzService {
             var client = Arrays.stream(((String[]) row)).collect(Collectors.toList()).get(1);
 
             String response = addPositionToFZUEgeriaInvoice(docId, frmName, productGroup, grossAmount, netAmount, vatAmount, vehicleNumber, description );
-            System.out.println(docId + ";" + frmName + ";" + productGroup + ";" + grossAmount + ";" + netAmount + ";" + vatAmount + ";" + vehicleNumber + ";" + docNumber + ";" + client + ";" + description);
+//            System.out.println(docId + ";" + frmName + ";" + productGroup + ";" + grossAmount + ";" + netAmount + ";" + vatAmount + ";" + vehicleNumber + ";" + docNumber + ";" + client + ";" + description);
         });
 
         return "OK";
