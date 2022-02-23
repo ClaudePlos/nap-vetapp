@@ -6,13 +6,15 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import org.hibernate.JDBCException;
 import org.hibernate.Session;
 import org.springframework.stereotype.Service;
+import pl.kskowronski.data.entity.Umowa;
+import pl.kskowronski.data.entity.UmowaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Types;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +23,11 @@ public class NzService {
     @PersistenceContext
     private EntityManager em;
 
+    private UmowaRepository umowaRepository;
+
+    public NzService(UmowaRepository umowaRepository) {
+        this.umowaRepository = umowaRepository;
+    }
 
     public int addHighwayFeeInvoiceToEgeria(DataProvider<String[],?> items, String frmName, String period, String foreignInvoiceNumber) {
 
@@ -120,6 +127,7 @@ public class NzService {
 
     public int addLeaseFeeInvoiceToEgeria(DataProvider<String[], ?> items, String frmName, String period, String foreignInvoiceNumber, String clientKod) {
 //        int dokId = 0;
+        String areContractsOk = verifyContractsExists(items);
         int dokId = addNewFZUDocumentHeader( frmName, period, foreignInvoiceNumber, clientKod);
         addPositionsToFZUEgeriaInvoice(dokId, frmName, items);
 
@@ -151,6 +159,21 @@ public class NzService {
         return docId;
     }
 
+    private String verifyContractsExists(DataProvider<String[],?> items) {
+        String result;
+
+//        Umowa umowa = new Umowa();
+
+        var rows = ((ListDataProvider) items).getItems();
+        rows.stream().forEach( row -> {
+            var numerRejestracyjny = Arrays.stream(((String[]) row)).collect(Collectors.toList()).get(9);
+            var umowa = umowaRepository.findUmowaByUmNumer( numerRejestracyjny );
+            if( umowa.isEmpty() ){
+                System.out.println("Nie znaleziomo umowy dla: " + numerRejestracyjny);
+            }
+        });
+        return "ok";
+    }
 
     private String addPositionsToFZUEgeriaInvoice(int docId, String frmName,  DataProvider<String[],?> items) {
 
@@ -169,7 +192,7 @@ public class NzService {
             var client = Arrays.stream(((String[]) row)).collect(Collectors.toList()).get(1);
 
             String response = addPositionToFZUEgeriaInvoice(docId, frmName, productGroup, grossAmount, netAmount, vatAmount, vehicleNumber, description );
-//            System.out.println(docId + ";" + frmName + ";" + productGroup + ";" + grossAmount + ";" + netAmount + ";" + vatAmount + ";" + vehicleNumber + ";" + docNumber + ";" + client + ";" + description);
+            System.out.println(docId + ";" + frmName + ";" + productGroup + ";" + grossAmount + ";" + netAmount + ";" + vatAmount + ";" + vehicleNumber + ";" + docNumber + ";" + client + ";" + description + ";response: " + response);
         });
 
         return "OK";
@@ -180,6 +203,12 @@ public class NzService {
             , String grossAmount, String netAmount, String vatAmount, String vehicle, String description) {
         Session session = em.unwrap( Session.class );
         String response = null;
+
+        Optional<Umowa> umowa = umowaRepository.findUmowaByUmNumer(vehicle);
+        if (umowa.isEmpty()) {
+            System.out.println("Brak umowy dla pojazu: " + vehicle);
+            response = "Brak umowy dla pojazu: " + vehicle;
+        } else
         try {
             response = session.doReturningWork(
                     connection -> {
