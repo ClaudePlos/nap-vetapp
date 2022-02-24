@@ -160,7 +160,7 @@ public class NzService {
     }
 
     private String verifyContractsExists(DataProvider<String[],?> items) {
-        String result;
+        String result = "ok";
 
 //        Umowa umowa = new Umowa();
 
