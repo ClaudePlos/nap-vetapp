@@ -22,8 +22,11 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.util.SharedUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import pl.kskowronski.data.entity.global.EatFirma;
+import pl.kskowronski.data.service.global.EatFirmaService;
 import pl.kskowronski.data.service.nz.NzService;
 import pl.kskowronski.views.MainLayout;
+import pl.kskowronski.views.components.PeriodLayout;
 
 import javax.annotation.security.PermitAll;
 import java.io.IOException;
@@ -35,22 +38,29 @@ import java.util.List;
 @PageTitle("FZU")
 @Route(value = "fzu", layout = MainLayout.class)
 @PermitAll
-public class FZUleazingView extends VerticalLayout {
+public class FZULeasingImportView extends VerticalLayout {
 
+    private EatFirmaService eatFirmaService;
     private NzService nzService;
 
     private Grid<String[]> grid = new Grid<>();
 
     private TextField fieldNrDoc = new TextField("Nr dok. Egeria");
-    private ComboBox<String> cmbClients = new ComboBox<>("Klient:");
+    private ComboBox<String> cmbClients = new ComboBox<>();
 
-    public FZUleazingView(NzService nzService) {
+    public FZULeasingImportView(EatFirmaService eatFirmaService, NzService nzService) {
+        this.eatFirmaService = eatFirmaService;
         this.nzService = nzService;
         setSpacing(false);
+
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         getStyle().set("text-align", "center");
+
+        var frmList  = getSelectFrm();
+        var period = new PeriodLayout(0);
+        var foreignInvoiceNumber = new TextField("");
 
         var buffer = new MemoryBuffer();
         var upload = new Upload(buffer);
@@ -64,24 +74,39 @@ public class FZUleazingView extends VerticalLayout {
             }
         });
 
-        cmbClients.setItems("ALD","TM_FLOTA","PCM");
+        cmbClients.setItems("ALD","TM_FLOTA","PCM","LeasePlan");
 
 
         var buttonInsertInvoiceToEgeria = new Button("Wgraj do Egerii");
         buttonInsertInvoiceToEgeria.addClickListener( e -> {
             var items = grid.getDataProvider();
-            int egeriaDokId = nzService.changePositionOnFzuInvoice(items, fieldNrDoc.getValue(), cmbClients.getValue() );
+//            int egeriaDokId = nzService.changePositionOnFzuInvoice(items, fieldNrDoc.getValue(), cmbClients.getValue() );
+            int egeriaDokId;
+            egeriaDokId = nzService.addLeaseFeeInvoiceToEgeria(items, frmList.getValue().getFrmNazwa(), period.getPeriod(), foreignInvoiceNumber.getValue(), cmbClients.getValue());
             Notification not = createSubmitSuccess("Dodano dokument w Egerii id: " + egeriaDokId);
             not.open();
         });
 
 
-        add(new Label("Należy podać numer dokumentu z Egerii, wskazać firmę i wskazać dokument excel w celu podmiany pozycji")
-                , new HorizontalLayout(fieldNrDoc, cmbClients)
+        add( new HorizontalLayout(new Label("Firma: ")
+                        , frmList
+                        , period
+                        , new Label("Numer obcy:")
+                        , foreignInvoiceNumber
+                        , new Label("Klient: ")
+                        , cmbClients
+                )
                 , grid
                 , upload
                 , buttonInsertInvoiceToEgeria
         );
+
+//        add(new Label("Należy podać numer dokumentu z Egerii, wskazać firmę i wskazać dokument excel w celu podmiany pozycji")
+//                , new HorizontalLayout(fieldNrDoc, cmbClients)
+//                , grid
+//                , upload
+//                , buttonInsertInvoiceToEgeria
+//        );
 
     }
 
@@ -161,6 +186,14 @@ public class FZUleazingView extends VerticalLayout {
         workbook.close();
     }
 
+// -----------------------------------------------------------------------
+
+    private ComboBox<EatFirma> getSelectFrm() {
+        ComboBox<EatFirma> comboFrm = new ComboBox<>();
+        comboFrm.setItems(eatFirmaService.findAll());
+        comboFrm.setItemLabelGenerator(EatFirma::getFrmNazwa);
+        return comboFrm;
+    }
 
 
     private Notification createSubmitSuccess( String text) {

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import pl.kskowronski.data.entity.admin.User;
 import pl.kskowronski.security.AuthenticatedUser;
-import pl.kskowronski.views.FZU_leasing_car_invoices.FZUleazingView;
+import pl.kskowronski.views.FZU_leasing_car_invoices.FZULeasingImportView;
 import pl.kskowronski.views.autostradaimport.AutostradaimportView;
 import pl.kskowronski.views.home.HomeView;
 import pl.kskowronski.views.map.MapView;
@@ -125,7 +125,7 @@ public class MainLayout extends AppLayout {
                 new MenuItemInfo("Home | ", "lab la-accusoft", HomeView.class), //
 
                 new MenuItemInfo("Autostrada import | ", "la la-car-side", AutostradaimportView.class), //
-                new MenuItemInfo("FZU leasing car | ", "la la-car-side", FZUleazingView.class), //
+                new MenuItemInfo("FZU leasing car | ", "la la-car-side", FZULeasingImportView.class), //
 
 
                 new MenuItemInfo("Map", "la la-map", MapView.class), //
