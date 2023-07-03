@@ -121,7 +121,7 @@ On production machine:
 1. If you want add adn build new image:
 sudo docker build -t nap-vetapp . << dot is important
 
-2. sudo docker run -p 8083:8080 nap-vetapp:latest
+2. sudo docker run --name nap-vetapp  -d -p 8083:8080 nap-vetapp:latest
 
 3. sudo docker container start ID (id from docker ps -a)
 
