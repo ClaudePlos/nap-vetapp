@@ -207,7 +207,7 @@ public class AutostradaimportView extends VerticalLayout {
                 String [] item = new String[row.getPhysicalNumberOfCells()];
                 for(Cell cell: row) {
                     String cellValue = dataFormatter.formatCellValue(cell);
-                    item[cell.getColumnIndex()] = cellValue;
+                        item[cell.getColumnIndex()] = cellValue;
                 }
                 data.add(item);
             }
